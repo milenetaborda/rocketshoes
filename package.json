@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "polished": "^3.5.1",
+    "react-icons": "^3.9.0"
+  }
+}
