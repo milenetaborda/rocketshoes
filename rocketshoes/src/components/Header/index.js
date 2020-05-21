@@ -13,7 +13,7 @@ export default function Header() {
             <img src={`${logo}`} alt="Rocketshoes" />
         </Link>
 
-        <Cart>
+        <Cart to="/cart">
             <div>
                 <strong>Meu Carrinho</strong>
                 <span>3 itens</span>
