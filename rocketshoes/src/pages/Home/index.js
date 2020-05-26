@@ -1,112 +1,64 @@
-import React from 'react';
-import { MdShoppingBasket } from 'react-icons/md'
+import React, {Component} from 'react';
+import { MdShoppingBasket } from 'react-icons/md';
+import api from '../../services/api';
+import { formatPrice } from '../../utils/format';
+
+import { connect } from 'react-redux';
 
 import { ProductList } from './styles';
 
-export default function Home() {
-  return (
-    <ProductList>
-      <li>
-        <img src="https://http2.mlstatic.com/novo-tenis-vans-old-skool-classic-unissex-promoco-original-D_NQ_NP_894541-MLB28422969325_102018-F.jpg"
-        alt="Tênis"
-        />
-  
-      <strong>Tenis muito legal</strong>
-      <span>R$: 120,90</span>
+class Home extends Component {
+  state = {
+    products: []
+  }
 
-      <button type="button">
-        <div>
-          <MdShoppingBasket size={16} color="#fff"/> 3
-        </div>
+  async componentDidMount(){
+    const response = await api.get('products');
 
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
+    const data = response.data.map(product => ({
+      ...product,
+      priceFormatted: formatPrice(product.price)
+    }))
+
+    this.setState({ products: data});
+  }
+
+  handleAddProdut = product => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'ADD_TO_CART',
+      product
+    });
+  };
+
+  render() {
+    const { products } = this.state;
+
+    return(
+      <ProductList>
+        {products && products.map(product => (
+          <li key={product.id}>
+            <img src={product.image}
+            alt={product.title}
+          />
+
+          <strong>{product.title}</strong>
+          <span>{product.priceFormatted}</span>
+
+          <button type="button" onClick={() => this.handleAddProdut(product)}>
+            <div>
+              <MdShoppingBasket size={16} color="#fff"/> 3
+            </div>
+
+            <span>ADICIONAR AO CARRINHO</span>
+          </button>
       </li>
+        ))}
 
-      <li>
-        <img src="https://http2.mlstatic.com/novo-tenis-vans-old-skool-classic-unissex-promoco-original-D_NQ_NP_894541-MLB28422969325_102018-F.jpg"
-        alt="Tênis"
-        />
-  
-      <strong>Tenis muito legal</strong>
-      <span>R$: 120,90</span>
-
-      <button type="button">
-        <div>
-          <MdShoppingBasket size={16} color="#fff"/> 3
-        </div>
-
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-      </li>
-
-      <li>
-        <img src="https://http2.mlstatic.com/novo-tenis-vans-old-skool-classic-unissex-promoco-original-D_NQ_NP_894541-MLB28422969325_102018-F.jpg"
-        alt="Tênis"
-        />
-  
-      <strong>Tenis muito legal</strong>
-      <span>R$: 120,90</span>
-
-      <button type="button">
-        <div>
-          <MdShoppingBasket size={16} color="#fff"/> 3
-        </div>
-
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-      </li>
-
-      <li>
-        <img src="https://http2.mlstatic.com/novo-tenis-vans-old-skool-classic-unissex-promoco-original-D_NQ_NP_894541-MLB28422969325_102018-F.jpg"
-        alt="Tênis"
-        />
-  
-      <strong>Tenis muito legal</strong>
-      <span>R$: 120,90</span>
-
-      <button type="button">
-        <div>
-          <MdShoppingBasket size={16} color="#fff"/> 3
-        </div>
-
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-      </li>
-
-      <li>
-        <img src="https://http2.mlstatic.com/novo-tenis-vans-old-skool-classic-unissex-promoco-original-D_NQ_NP_894541-MLB28422969325_102018-F.jpg"
-        alt="Tênis"
-        />
-  
-      <strong>Tenis muito legal</strong>
-      <span>R$: 120,90</span>
-
-      <button type="button">
-        <div>
-          <MdShoppingBasket size={16} color="#fff"/> 3
-        </div>
-
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-      </li>
-
-      <li>
-        <img src="https://http2.mlstatic.com/novo-tenis-vans-old-skool-classic-unissex-promoco-original-D_NQ_NP_894541-MLB28422969325_102018-F.jpg"
-        alt="Tênis"
-        />
-  
-      <strong>Tenis muito legal</strong>
-      <span>R$: 120,90</span>
-
-      <button type="button">
-        <div>
-          <MdShoppingBasket size={16} color="#fff"/> 3
-        </div>
-
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-      </li>
     </ProductList>
-  );
+    )
+  }
 }
+
+export default connect()(Home);
